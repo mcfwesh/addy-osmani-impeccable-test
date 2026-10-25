@@ -1,0 +1,10 @@
+# Local machine settings
+.claude/settings.local.json
+.impeccable/config.local.json
+
+# Dependencies and test output
+node_modules/
+test-results/
+playwright-report/
+
+.DS_Store
