@@ -4,7 +4,7 @@ Full task details, acceptance criteria, and verification steps are in `tasks/pla
 
 ## Phase 1: Foundation
 - [ ] Task 1: Project scaffold and end-to-end test harness
-- [ ] Task 2: Local-date helpers (`dates.js`) — `addDays` done in Task 6; the rest remains
+- [x] Task 2: Local-date helpers (`dates.js`)
 - [ ] Task 3: Persist to localStorage (`store.js`)
 
 ## Phase 2: Core loop
