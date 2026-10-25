@@ -11,7 +11,7 @@ Full task details, acceptance criteria, and verification steps are in `tasks/pla
 - [ ] Task 4: Add a habit
 - [ ] Task 5: Mark today done
 - [x] Task 6: Compute daily streaks
-- [ ] Task 7: Compute weekly streaks
+- [x] Task 7: Compute weekly streaks
 - [ ] Task 8: Show stats on Today
 
 ## Checkpoint A: Core loop
