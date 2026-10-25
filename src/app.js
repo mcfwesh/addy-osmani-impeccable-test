@@ -1,4 +1,4 @@
-import { load, save, addHabit, emptyData } from './store.js';
+import { load, save, addHabit, toggleDone, emptyData } from './store.js';
 import { todayDate } from './dates.js';
 import { render as renderToday } from './views/today.js';
 import { render as renderNew } from './views/new-habit.js';
@@ -54,6 +54,10 @@ function commit(nextData) {
   state.saveFailed = save(window.localStorage, state.data) === 'failed';
 }
 
+function rerender() {
+  renderRoute();
+}
+
 const actions = {
   navigate(hash) {
     window.location.hash = hash;
@@ -61,6 +65,10 @@ const actions = {
   addHabit(input) {
     commit(addHabit(state.data, input, { id: crypto.randomUUID(), createdAt: new Date().toISOString() }));
     actions.navigate('#/');
+  },
+  toggleToday(habitId) {
+    commit(toggleDone(state.data, habitId, state.todayDate, state.todayDate));
+    rerender();
   },
 };
 

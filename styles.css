@@ -44,3 +44,7 @@ input[type="radio"] { width: 24px; height: 24px; }
 
 li { min-height: 44px; display: flex; align-items: center; }
 ul { padding-left: 0; list-style: none; }
+
+li { gap: 0.75rem; }
+.habit-name { flex: 1; overflow-wrap: anywhere; }
+.done-toggle[aria-pressed="true"] { font-weight: bold; border-width: 3px; }

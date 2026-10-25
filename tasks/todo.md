@@ -9,7 +9,7 @@ Full task details, acceptance criteria, and verification steps are in `tasks/pla
 
 ## Phase 2: Core loop
 - [x] Task 4: Add a habit
-- [ ] Task 5: Mark today done
+- [x] Task 5: Mark today done
 - [x] Task 6: Compute daily streaks
 - [x] Task 7: Compute weekly streaks
 - [ ] Task 8: Show stats on Today

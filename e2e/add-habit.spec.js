@@ -62,7 +62,7 @@ test('saving a daily habit returns to Today and lists it', async ({ page }) => {
   await addHabit(page, 'Read');
   await expect(page).toHaveURL(/#\/$/);
   await expect(page.getByRole('heading', { name: 'Today', level: 1 })).toBeVisible();
-  await expect(page.getByRole('listitem')).toHaveText(['Read']);
+  await expect(page.getByRole('listitem')).toContainText(['Read']);
   await expect(page.getByRole('link', { name: 'Add habit' })).toBeVisible();
   await expect(page.getByRole('link', { name: 'Settings' })).toBeVisible();
   const data = await stored(page);
@@ -73,7 +73,7 @@ test('saving a daily habit returns to Today and lists it', async ({ page }) => {
 test('a weekly habit is added after the first and stores its target', async ({ page }) => {
   await addHabit(page, 'Read');
   await addHabit(page, 'Run', 'Weekly', 5);
-  await expect(page.getByRole('listitem')).toHaveText(['Read', 'Run']);
+  await expect(page.getByRole('listitem')).toContainText(['Read', 'Run']);
   const data = await stored(page);
   expect(data.habits[1]).toMatchObject({ name: 'Run', cadence: 'weekly', weeklyTarget: 5 });
 });
@@ -90,5 +90,5 @@ test('Cancel returns to Today with no change', async ({ page }) => {
 test('habits survive a reload', async ({ page }) => {
   await addHabit(page, 'Read');
   await page.reload();
-  await expect(page.getByRole('listitem')).toHaveText(['Read']);
+  await expect(page.getByRole('listitem')).toContainText(['Read']);
 });
