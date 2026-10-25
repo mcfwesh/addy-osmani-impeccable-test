@@ -1,6 +1,6 @@
 # Spec: Habit Tracker
 
-Status: draft, waiting for approval. Source: `docs/intent/habit-tracker.md` (confirmed 2026-10-25).
+Status: approved by the user on 2026-10-25. Source: `docs/intent/habit-tracker.md` (confirmed 2026-10-25).
 
 ## Objective
 
