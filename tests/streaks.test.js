@@ -8,6 +8,7 @@ import {
   currentStreak,
   bestStreak,
   weekProgress,
+  weekStatus,
 } from '../src/streaks.js';
 
 const todayDate = '2026-10-25';
@@ -320,4 +321,50 @@ test('weekProgress ignores dates after today and duplicates', () => {
 
 test('weekProgress is null for a daily habit', () => {
   assert.equal(weekProgress(dailyHabit, settings, todayDate), null);
+});
+
+const weeklyWith = (target, done) => ({ cadence: 'weekly', weeklyTarget: target, done });
+
+test('weekStatus is hit when done days reach the target', () => {
+  const habit = weeklyWith(3, ['2026-10-12', '2026-10-13', '2026-10-14']);
+  assert.deepEqual(weekStatus(habit, settings, '2026-10-12', todayDate), { done: 3, target: 3, hit: true, state: 'hit' });
+});
+
+test('weekStatus counts more done days than the target as hit', () => {
+  const habit = weeklyWith(2, ['2026-10-12', '2026-10-13', '2026-10-14']);
+  assert.deepEqual(weekStatus(habit, settings, '2026-10-12', todayDate), { done: 3, target: 2, hit: true, state: 'hit' });
+});
+
+test('weekStatus is missed for a past week below the target', () => {
+  const habit = weeklyWith(3, ['2026-10-12']);
+  assert.deepEqual(weekStatus(habit, settings, '2026-10-12', todayDate), { done: 1, target: 3, hit: false, state: 'missed' });
+});
+
+test('weekStatus is pending for the current week below the target', () => {
+  const habit = weeklyWith(3, ['2026-10-19', '2026-10-20']);
+  assert.deepEqual(weekStatus(habit, settings, '2026-10-19', todayDate), { done: 2, target: 3, hit: false, state: 'pending' });
+});
+
+test('weekStatus is hit for the current week once the target is reached', () => {
+  const habit = weeklyWith(2, ['2026-10-19', '2026-10-20']);
+  assert.equal(weekStatus(habit, settings, '2026-10-19', todayDate).state, 'hit');
+});
+
+test('weekStatus is future for a week that starts after today', () => {
+  const habit = weeklyWith(3, ['2026-10-27']);
+  assert.deepEqual(weekStatus(habit, settings, '2026-10-26', todayDate), { done: 0, target: 3, hit: false, state: 'future' });
+});
+
+test('weekStatus counts days across a month boundary', () => {
+  const habit = weeklyWith(3, ['2026-09-28', '2026-09-30', '2026-10-02']);
+  assert.deepEqual(weekStatus(habit, settings, '2026-09-28', todayDate), { done: 3, target: 3, hit: true, state: 'hit' });
+});
+
+test('weekStatus ignores dates after today and duplicates', () => {
+  const habit = weeklyWith(3, ['2026-10-20', '2026-10-20', '2026-10-23', '2026-10-24']);
+  assert.deepEqual(weekStatus(habit, settings, '2026-10-19', '2026-10-22'), { done: 1, target: 3, hit: false, state: 'pending' });
+});
+
+test('weekStatus is null for a daily habit', () => {
+  assert.equal(weekStatus(dailyHabit, settings, '2026-10-19', todayDate), null);
 });

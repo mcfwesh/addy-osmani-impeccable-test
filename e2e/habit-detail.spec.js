@@ -70,10 +70,10 @@ test('the calendar opens on October 2026 with done days pressed and future days 
   await seed(page, [READ]);
   await page.goto('./#/habit/read-1');
   await expect(page.getByRole('heading', { level: 2, name: 'October 2026' })).toBeVisible();
-  await expect(day(page, 'Saturday 24 October 2026, done')).toHaveAttribute('aria-pressed', 'true');
-  await expect(day(page, 'Friday 23 October 2026, done')).toHaveAttribute('aria-pressed', 'true');
-  await expect(day(page, 'Sunday 25 October 2026, not done')).toHaveAttribute('aria-pressed', 'false');
-  await expect(day(page, 'Sunday 25 October 2026, not done')).toBeEnabled();
+  await expect(day(page, 'Saturday 24 October 2026')).toHaveAttribute('aria-pressed', 'true');
+  await expect(day(page, 'Friday 23 October 2026')).toHaveAttribute('aria-pressed', 'true');
+  await expect(day(page, 'Sunday 25 October 2026')).toHaveAttribute('aria-pressed', 'false');
+  await expect(day(page, 'Sunday 25 October 2026')).toBeEnabled();
   for (let d = 26; d <= 31; d++) {
     await expect(page.locator(`button[data-date="2026-10-${d}"]`)).toBeDisabled();
   }
@@ -87,8 +87,8 @@ test('Previous month shows September 2026 with its done days; Next month toggles
   await expect(next).toBeDisabled();
   await page.getByRole('button', { name: 'Previous month' }).click();
   await expect(page.getByRole('heading', { level: 2, name: 'September 2026' })).toBeVisible();
-  await expect(day(page, 'Thursday 10 September 2026, done')).toHaveAttribute('aria-pressed', 'true');
-  await expect(day(page, 'Friday 11 September 2026, done')).toHaveAttribute('aria-pressed', 'true');
+  await expect(day(page, 'Thursday 10 September 2026')).toHaveAttribute('aria-pressed', 'true');
+  await expect(day(page, 'Friday 11 September 2026')).toHaveAttribute('aria-pressed', 'true');
   await expect(page.locator('button.day[aria-pressed="true"]')).toHaveCount(2);
   await expect(page.locator('button.day:disabled')).toHaveCount(0);
   await expect(next).toBeEnabled();

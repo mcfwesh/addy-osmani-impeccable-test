@@ -68,9 +68,12 @@ const actions = {
     commit(addHabit(state.data, input, { id: crypto.randomUUID(), createdAt: new Date().toISOString() }));
     actions.navigate('#/');
   },
-  toggleToday(habitId) {
-    commit(toggleDone(state.data, habitId, state.todayDate, state.todayDate));
+  toggleDay(habitId, date) {
+    commit(toggleDone(state.data, habitId, date, state.todayDate));
     rerender();
+  },
+  toggleToday(habitId) {
+    actions.toggleDay(habitId, state.todayDate);
   },
 };
 

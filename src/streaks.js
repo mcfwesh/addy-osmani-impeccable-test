@@ -78,10 +78,25 @@ export function bestStreak(habit, settings, todayDate) {
   return bestDailyStreak(habit.done, todayDate);
 }
 
+// Status of the whole week that starts on weekStartDate. Dates after todayDate are ignored.
+// state: 'hit', 'missed' (week is over), 'pending' (week still running) or 'future'.
+// Daily habits have no weekly status.
+export function weekStatus(habit, settings, weekStartDate, todayDate) {
+  if (habit.cadence !== 'weekly') return null;
+  const weekEndDate = addDays(weekStartDate, 6);
+  const done = new Set(habit.done.filter((date) => date >= weekStartDate && date <= weekEndDate && date <= todayDate)).size;
+  const target = habit.weeklyTarget;
+  const hit = done >= target;
+  let state = 'hit';
+  if (weekStartDate > todayDate) state = 'future';
+  else if (!hit) state = weekEndDate < todayDate ? 'missed' : 'pending';
+  return { done, target, hit, state };
+}
+
 // Progress for the week that contains todayDate. Daily habits have no weekly progress.
 export function weekProgress(habit, settings, todayDate) {
-  if (habit.cadence !== 'weekly') return null;
-  const weekStartDate = startOfWeek(todayDate, settings.weekStartsOn);
-  const done = new Set(habit.done.filter((date) => date >= weekStartDate && date <= todayDate)).size;
-  return { done, target: habit.weeklyTarget, hit: done >= habit.weeklyTarget };
+  const status = weekStatus(habit, settings, startOfWeek(todayDate, settings.weekStartsOn), todayDate);
+  if (!status) return null;
+  const { done, target, hit } = status;
+  return { done, target, hit };
 }
