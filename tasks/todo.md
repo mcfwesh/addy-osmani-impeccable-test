@@ -3,7 +3,7 @@
 Full task details, acceptance criteria, and verification steps are in `tasks/plan.md`.
 
 ## Phase 1: Foundation
-- [ ] Task 1: Project scaffold and end-to-end test harness
+- [x] Task 1: Project scaffold and end-to-end test harness
 - [x] Task 2: Local-date helpers (`dates.js`)
 - [x] Task 3: Persist to localStorage (`store.js`)
 

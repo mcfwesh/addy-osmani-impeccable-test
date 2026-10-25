@@ -1,0 +1,16 @@
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system, sans-serif;
+  font-size: 1rem;
+  line-height: 1.5;
+}
+
+main {
+  padding: 1rem;
+}
+
+button {
+  min-width: 44px;
+  min-height: 44px;
+  font: inherit;
+}
