@@ -1,4 +1,6 @@
 import { el } from './dom.js';
+import { formatStreak } from './format.js';
+import { currentStreak, weekProgress } from '../streaks.js';
 
 export function render(root, state, actions) {
   const focusedId = document.activeElement?.dataset?.habitId;
@@ -11,6 +13,9 @@ export function render(root, state, actions) {
       el('a', { href: '#/new', className: 'button', text: 'Add your first habit' }),
     );
   } else {
+    if (habits.every((habit) => isDoneForToday(habit, state))) {
+      children.push(el('p', { role: 'status', className: 'all-done', text: 'All done for today.' }));
+    }
     children.push(
       el('ul', {}, ...habits.map((habit) => habitRow(habit, state, actions))),
       el('nav', { 'aria-label': 'Actions' },
@@ -25,10 +30,22 @@ export function render(root, state, actions) {
   }
 }
 
+function isDoneForToday(habit, state) {
+  if (habit.done.includes(state.todayDate)) return true;
+  return weekProgress(habit, state.data.settings, state.todayDate)?.hit === true;
+}
+
 function habitRow(habit, state, actions) {
   const done = habit.done.includes(state.todayDate);
+  const { settings } = state.data;
+  const progress = weekProgress(habit, settings, state.todayDate);
+  const streak = formatStreak(currentStreak(habit, settings, state.todayDate), habit.cadence);
+  const stats = progress ? `${streak} · ${progress.done} of ${progress.target} this week` : streak;
   return el('li', {},
-    el('span', { className: 'habit-name', text: habit.name }),
+    el('div', { className: 'habit-info' },
+      el('span', { className: 'habit-name', text: habit.name }),
+      el('span', { className: 'habit-stats', text: stats }),
+    ),
     el('button', {
       type: 'button',
       className: 'done-toggle',

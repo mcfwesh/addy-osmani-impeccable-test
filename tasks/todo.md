@@ -12,7 +12,7 @@ Full task details, acceptance criteria, and verification steps are in `tasks/pla
 - [x] Task 5: Mark today done
 - [x] Task 6: Compute daily streaks
 - [x] Task 7: Compute weekly streaks
-- [ ] Task 8: Show stats on Today
+- [x] Task 8: Show stats on Today
 
 ## Checkpoint A: Core loop
 - [ ] All tests pass, core loop works on the dev server, review with the user
