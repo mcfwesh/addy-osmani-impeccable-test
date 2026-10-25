@@ -46,7 +46,7 @@ The five core features map to these tasks:
 **Description:** Create the app shell and the test tooling. After this task, the dev server serves an empty app, and Playwright can open it in WebKit with an iPhone device profile.
 
 **Acceptance criteria:**
-- [ ] `package.json` has `"type": "module"`, a `test` script (`node --test tests/`), and `@playwright/test` as a dev dependency.
+- [ ] `package.json` has `"type": "module"`, a `test` script (`node --test "tests/**/*.test.js"`), and `@playwright/test` as a dev dependency. (`package.json` already exists from Task 6; add Playwright to it.)
 - [ ] `playwright.config.js` uses WebKit with an iPhone device profile and starts `python3 -m http.server 4174 --bind 127.0.0.1` as its web server.
 - [ ] `index.html` loads `./src/app.js` as a module, using relative paths only. `app.js` renders a placeholder Today heading and handles routes: unknown routes go to `#/`.
 
@@ -72,7 +72,7 @@ The five core features map to these tasks:
 
 **Verification:**
 - [ ] `npm test` and `TZ=America/New_York npm test` both pass.
-- [ ] `node --test --experimental-test-coverage tests/` shows 100% branch coverage for `src/dates.js`.
+- [ ] `node --test --experimental-test-coverage "tests/**/*.test.js"` shows 100% branch coverage for `src/dates.js`.
 
 **Dependencies:** None (can run in parallel with Task 1)
 
@@ -167,7 +167,7 @@ The five core features map to these tasks:
 
 **Verification:**
 - [ ] `npm test` passes.
-- [ ] `node --test --experimental-test-coverage tests/` shows 100% branch coverage for `src/streaks.js`.
+- [ ] `node --test --experimental-test-coverage "tests/**/*.test.js"` shows 100% branch coverage for `src/streaks.js`.
 
 **Dependencies:** Task 6 (same file)
 
