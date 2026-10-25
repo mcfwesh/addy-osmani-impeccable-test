@@ -18,7 +18,7 @@ Full task details, acceptance criteria, and verification steps are in `tasks/pla
 - [ ] All tests pass, core loop works on the dev server, review with the user
 
 ## Phase 3: History and editing
-- [ ] Task 9: Habit detail screen with stats and calendar
+- [x] Task 9: Habit detail screen with stats and calendar
 - [ ] Task 10: Mark past days done
 - [ ] Task 11: Edit and delete a habit
 

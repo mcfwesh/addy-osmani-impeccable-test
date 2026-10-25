@@ -43,7 +43,7 @@ function habitRow(habit, state, actions) {
   const stats = progress ? `${streak} · ${progress.done} of ${progress.target} this week` : streak;
   return el('li', {},
     el('div', { className: 'habit-info' },
-      el('span', { className: 'habit-name', text: habit.name }),
+      el('a', { className: 'habit-name', href: `#/habit/${encodeURIComponent(habit.id)}`, text: habit.name }),
       el('span', { className: 'habit-stats', text: stats }),
     ),
     el('button', {
