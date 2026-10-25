@@ -43,10 +43,10 @@ All commands run from the repository root.
 python3 -m http.server 4174 --bind 127.0.0.1
 
 # Unit tests
-npm test                      # runs: node --test tests/
+npm test                      # runs: node --test "tests/**/*.test.js"
 
 # Unit tests with coverage
-node --test --experimental-test-coverage tests/
+node --test --experimental-test-coverage "tests/**/*.test.js"
 
 # One-time setup for end-to-end tests
 npm install
