@@ -8,7 +8,7 @@ Full task details, acceptance criteria, and verification steps are in `tasks/pla
 - [x] Task 3: Persist to localStorage (`store.js`)
 
 ## Phase 2: Core loop
-- [ ] Task 4: Add a habit
+- [x] Task 4: Add a habit
 - [ ] Task 5: Mark today done
 - [x] Task 6: Compute daily streaks
 - [x] Task 7: Compute weekly streaks

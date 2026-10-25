@@ -14,3 +14,33 @@ button {
   min-height: 44px;
   font: inherit;
 }
+
+a, button, input[type="text"], input[type="number"] {
+  min-height: 44px;
+  box-sizing: border-box;
+}
+
+a.button, nav a {
+  display: inline-flex;
+  align-items: center;
+  min-width: 44px;
+  padding: 0 0.75rem;
+}
+
+input[type="text"], input[type="number"] {
+  display: block;
+  width: 100%;
+  font: inherit;
+  padding: 0 0.5rem;
+}
+
+fieldset { margin: 1rem 0; }
+fieldset label { display: flex; align-items: center; gap: 0.5rem; min-height: 44px; }
+input[type="radio"] { width: 24px; height: 24px; }
+
+:focus-visible { outline: 3px solid currentColor; outline-offset: 2px; }
+
+.error { margin: 0.25rem 0 0; font-weight: bold; }
+
+li { min-height: 44px; display: flex; align-items: center; }
+ul { padding-left: 0; list-style: none; }
