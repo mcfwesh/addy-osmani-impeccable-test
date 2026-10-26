@@ -68,3 +68,8 @@ li { gap: 0.75rem; }
   position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0;
   overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
 }
+
+.habit-actions { display: flex; gap: 0.75rem; flex-wrap: wrap; margin: 0.75rem 0; }
+.recalc-note { margin: 0.5rem 0; font-weight: bold; }
+.delete-habit, .delete-confirm { border-width: 3px; border-style: double; font-weight: bold; }
+dialog { max-width: 28rem; }

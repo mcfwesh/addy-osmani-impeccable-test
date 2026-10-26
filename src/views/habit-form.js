@@ -20,8 +20,25 @@ export function renderForm(root, { habit = null, title, onSubmit, onCancel }) {
   function syncTarget() {
     targetField.hidden = !weekly.checked;
   }
-  daily.addEventListener('change', syncTarget);
-  weekly.addEventListener('change', syncTarget);
+  // Editing only: tell the user that changing cadence or target recalculates streaks.
+  // The container stays in the page so screen readers announce the text when it appears.
+  const recalcNote = el('p', { className: 'recalc-note', 'aria-live': 'polite' });
+  function syncRecalcNote() {
+    if (!habit) return;
+    const nowWeekly = weekly.checked;
+    const changed = nowWeekly
+      ? habit.cadence !== 'weekly' || Number(targetInput.value) !== habit.weeklyTarget
+      : habit.cadence !== 'daily';
+    recalcNote.textContent = changed ? 'Streaks will be recalculated from your history.' : '';
+  }
+
+  function onChange() {
+    syncTarget();
+    syncRecalcNote();
+  }
+  daily.addEventListener('change', onChange);
+  weekly.addEventListener('change', onChange);
+  targetInput.addEventListener('input', syncRecalcNote);
 
   function showError(input, errorNode, message) {
     errorNode.textContent = message;
@@ -48,6 +65,7 @@ export function renderForm(root, { habit = null, title, onSubmit, onCancel }) {
       el('label', {}, weekly, ' Weekly'),
     ),
     targetField,
+    recalcNote,
     el('button', { type: 'submit', text: 'Save' }),
     el('button', { type: 'button', text: 'Cancel', onclick: onCancel }),
   );

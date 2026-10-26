@@ -1,7 +1,8 @@
-import { load, save, addHabit, toggleDone, emptyData } from './store.js';
+import { load, save, addHabit, updateHabit, deleteHabit, toggleDone, emptyData } from './store.js';
 import { todayDate } from './dates.js';
 import { render as renderToday } from './views/today.js';
 import { render as renderHabit } from './views/habit.js';
+import { render as renderEdit } from './views/edit-habit.js';
 import { render as renderNew } from './views/new-habit.js';
 import { render as renderStorageProblem } from './views/storage-problem.js';
 
@@ -20,6 +21,7 @@ const routes = [
   { pattern: '#/', view: renderToday },
   { pattern: '#/new', view: renderNew },
   { pattern: '#/habit/:id', view: renderHabit },
+  { pattern: '#/habit/:id/edit', view: renderEdit },
 ];
 
 function matchRoute(hash) {
@@ -66,6 +68,14 @@ const actions = {
   },
   addHabit(input) {
     commit(addHabit(state.data, input, { id: crypto.randomUUID(), createdAt: new Date().toISOString() }));
+    actions.navigate('#/');
+  },
+  updateHabit(habitId, input) {
+    commit(updateHabit(state.data, habitId, input));
+    actions.navigate(`#/habit/${encodeURIComponent(habitId)}`);
+  },
+  deleteHabit(habitId) {
+    commit(deleteHabit(state.data, habitId));
     actions.navigate('#/');
   },
   toggleDay(habitId, date) {

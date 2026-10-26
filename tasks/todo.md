@@ -20,7 +20,7 @@ Full task details, acceptance criteria, and verification steps are in `tasks/pla
 ## Phase 3: History and editing
 - [x] Task 9: Habit detail screen with stats and calendar
 - [x] Task 10: Mark past days done
-- [ ] Task 11: Edit and delete a habit
+- [x] Task 11: Edit and delete a habit
 
 ## Checkpoint B: History and editing
 - [ ] All tests pass, review with the user, decide the design step timing

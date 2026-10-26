@@ -36,10 +36,16 @@ export function render(root, state, actions, params) {
     el('h1', { text: habit.name }),
     el('p', { className: 'habit-cadence', text: cadenceText }),
   ];
+  const deleteButton = el('button', { type: 'button', className: 'delete-habit', text: 'Delete' });
+  deleteButton.addEventListener('click', () => openDeleteDialog(habit, deleteButton, actions));
   if (habit.cadence === 'weekly') {
     children.push(el('p', { text: `Target: ${habit.weeklyTarget} ${habit.weeklyTarget === 1 ? 'day' : 'days'} a week` }));
   }
   children.push(
+    el('div', { className: 'habit-actions' },
+      el('a', { href: `#/habit/${encodeURIComponent(habit.id)}/edit`, className: 'button', text: 'Edit' }),
+      deleteButton,
+    ),
     el('p', { className: 'streak-current', text: `Current streak: ${formatStreak(currentStreak(habit, settings, state.todayDate), habit.cadence)}` }),
     el('p', { className: 'streak-best', text: `Best streak: ${formatStreak(bestStreak(habit, settings, state.todayDate), habit.cadence)}` }),
     el('div', { className: 'month-nav' },
@@ -110,4 +116,36 @@ function dayButton(date, habit, state, actions) {
       actions.toggleDay(habit.id, date);
     },
   });
+}
+
+// Confirm step before deleting. A native <dialog> traps focus and closes on Escape.
+function openDeleteDialog(habit, opener, actions) {
+  const title = el('h2', { id: 'delete-title' });
+  title.textContent = `Delete ${habit.name}?`;
+  const cancel = el('button', { type: 'button', text: 'Cancel' });
+  const confirm = el('button', { type: 'button', className: 'delete-confirm', text: 'Delete habit' });
+  const dialog = el('dialog', { 'aria-labelledby': 'delete-title' },
+    title,
+    el('p', { text: 'This deletes the habit and all of its history. You cannot undo this. To keep a copy, export a backup in Settings first.' }),
+    el('div', { className: 'habit-actions' }, cancel, confirm),
+  );
+  const close = () => {
+    dialog.close();
+    dialog.remove();
+    opener.focus();
+  };
+  cancel.addEventListener('click', close);
+  dialog.addEventListener('cancel', (event) => {
+    event.preventDefault();
+    close();
+  });
+  confirm.addEventListener('click', () => {
+    dialog.close();
+    dialog.remove();
+    actions.deleteHabit(habit.id);
+  });
+  // Inside the view, so a route change (e.g. Back) removes it with the screen.
+  opener.parentElement.append(dialog);
+  dialog.showModal();
+  cancel.focus();
 }
