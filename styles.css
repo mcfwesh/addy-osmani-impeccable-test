@@ -76,3 +76,7 @@ dialog { max-width: 28rem; }
 
 .settings-section { margin: 1.5rem 0; }
 select { min-height: 44px; min-width: 44px; font: inherit; padding: 0 0.5rem; }
+
+.banner { margin: 1rem 1rem 0; padding: 0.75rem 1rem; border: 3px solid currentColor; }
+.banner p { margin: 0.25rem 0 0; }
+.problem-details { font-size: 0.875rem; overflow-wrap: anywhere; }
