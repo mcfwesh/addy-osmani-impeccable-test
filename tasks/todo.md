@@ -36,7 +36,7 @@ Full task details, acceptance criteria, and verification steps are in `tasks/pla
 
 ## Phase 5: Offline and deployment
 - [x] Task 16: Offline use and home-screen install
-- [ ] Task 17: GitHub Pages deployment
+- [x] Task 17: GitHub Pages deployment
 - [ ] Task 18: iPhone checks
 
 ## Checkpoint: Complete
