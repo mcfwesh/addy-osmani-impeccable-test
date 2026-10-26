@@ -29,7 +29,7 @@ Full task details, acceptance criteria, and verification steps are in `tasks/pla
 - [x] Task 12: Settings screen: week start and delete all data
 - [x] Task 13: Export and import a backup
 - [x] Task 14: Storage problem and data problem states
-- [ ] Task 15: Live updates: other tabs, midnight, and persistent storage
+- [x] Task 15: Live updates: other tabs, midnight, and persistent storage
 
 ## Checkpoint C: Data safety
 - [ ] All tests pass, end-to-end flows 1 to 6 covered, review with the user

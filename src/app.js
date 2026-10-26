@@ -1,5 +1,6 @@
-import { load, save, addHabit, updateHabit, deleteHabit, toggleDone, setWeekStartsOn, clearAll, emptyData } from './store.js';
+import { load, save, addHabit, updateHabit, deleteHabit, toggleDone, setWeekStartsOn, clearAll, emptyData, STORAGE_KEY } from './store.js';
 import { todayDate } from './dates.js';
+import { msUntilNextLocalMidnight } from './clock.js';
 import { render as renderToday } from './views/today.js';
 import { render as renderHabit } from './views/habit.js';
 import { render as renderEdit } from './views/edit-habit.js';
@@ -18,17 +19,26 @@ function getStorage() {
   }
 }
 
-const loaded = load(getStorage());
-
 const state = {
-  loadStatus: loaded.status,
-  data: loaded.data ?? emptyData(),
+  loadStatus: 'empty',
+  data: emptyData(),
   // The exact stored text and the reason it was rejected. Only set for the two read-only statuses.
-  raw: loaded.raw ?? null,
-  loadError: loaded.error ?? null,
+  raw: null,
+  loadError: null,
   saveFailed: false,
   todayDate: todayDate(new Date()),
 };
+
+// Replace the stored-data part of state from a fresh read. Used at start-up and
+// when another tab changes storage. It never writes.
+function applyLoad(loaded) {
+  state.loadStatus = loaded.status;
+  state.data = loaded.data ?? emptyData();
+  state.raw = loaded.raw ?? null;
+  state.loadError = loaded.error ?? null;
+}
+
+applyLoad(load(getStorage()));
 
 // Read-only means stored data failed validation or is newer than this app.
 // The app must not write in this mode. Only resetAllData leaves it.
@@ -161,6 +171,51 @@ const actions = {
     actions.toggleDay(habitId, state.todayDate);
   },
 };
+
+// Another tab changed storage. A null key means storage was cleared. Read it
+// again and show what is there. Nothing is written in response.
+window.addEventListener('storage', (event) => {
+  if (event.key !== null && event.key !== STORAGE_KEY) return;
+  applyLoad(load(getStorage()));
+  rerender();
+});
+
+// Move "today" forward when the local date changed. Nothing is saved: streaks
+// and done states are recomputed from the stored dates on render.
+function refreshToday() {
+  const next = todayDate(new Date());
+  if (next === state.todayDate) return;
+  state.todayDate = next;
+  rerender();
+}
+
+let midnightTimer = null;
+
+function scheduleMidnightRefresh() {
+  clearTimeout(midnightTimer);
+  midnightTimer = setTimeout(() => {
+    refreshToday();
+    scheduleMidnightRefresh();
+  }, msUntilNextLocalMidnight(new Date()));
+}
+
+// Timers pause while an installed iPhone app is in the background, so the date
+// is also checked each time the app comes back to the front.
+document.addEventListener('visibilitychange', () => {
+  if (document.visibilityState !== 'visible') return;
+  refreshToday();
+  scheduleMidnightRefresh();
+});
+scheduleMidnightRefresh();
+
+// Ask the browser to keep our data when space is low. The answer changes nothing.
+try {
+  if (navigator.storage && typeof navigator.storage.persist === 'function') {
+    Promise.resolve(navigator.storage.persist()).catch(() => {});
+  }
+} catch {
+  // Ignored on purpose.
+}
 
 window.addEventListener('hashchange', renderRoute);
 if (!window.location.hash) {
