@@ -1,6 +1,8 @@
 import { el } from './dom.js';
 import { confirmDialog } from './confirm.js';
 import { weekdayNames } from '../calendar.js';
+import { backupFileName, serializeBackup, parseBackup, MAX_BACKUP_BYTES } from '../backup.js';
+import { downloadText } from './download.js';
 
 // Shown after a week start change, so it survives the re-render.
 let savedNote = false;
@@ -24,6 +26,42 @@ export function render(root, state, actions) {
     onConfirm: () => actions.deleteAllData(),
   }));
 
+  const exportButton = el('button', { type: 'button', text: 'Export backup' });
+  exportButton.addEventListener('click', () => {
+    downloadText(backupFileName(state.todayDate), serializeBackup(state.data));
+  });
+
+  // The file picker is hidden. The visible button opens it, so keyboard users can reach it.
+  const importError = el('p', { role: 'alert', className: 'import-error' });
+  const fileInput = el('input', {
+    type: 'file',
+    accept: '.json,application/json',
+    hidden: true,
+    tabIndex: -1,
+    'aria-label': 'Backup file',
+  });
+  const importButton = el('button', { type: 'button', text: 'Import backup' });
+  importButton.addEventListener('click', () => fileInput.click());
+  fileInput.addEventListener('change', async () => {
+    const file = fileInput.files[0];
+    importError.textContent = '';
+    if (!file) return;
+    const result = await readBackup(file);
+    // Choosing the same file again must fire "change" again.
+    fileInput.value = '';
+    if (!result.ok) {
+      importError.textContent = result.error;
+      return;
+    }
+    confirmDialog({
+      opener: importButton,
+      title: 'Replace all data?',
+      body: `This backup holds ${result.summary}. Importing replaces all habits and history on this phone. You cannot undo this.`,
+      confirmText: 'Import backup',
+      onConfirm: () => actions.importData(result.data),
+    });
+  });
+
   const hadFocus = document.activeElement?.id === 'week-start';
   root.replaceChildren(
     el('a', { href: '#/', text: 'Today' }),
@@ -34,7 +72,11 @@ export function render(root, state, actions) {
       select,
       el('p', { role: 'status', 'aria-live': 'polite', className: 'saved-note', text: savedNote ? 'Saved.' : '' }),
     ),
-    // Task 13 adds the Backup section (Export and Import) here.
+    el('section', { className: 'settings-section' },
+      el('h2', { text: 'Backup' }),
+      el('div', { className: 'habit-actions' }, exportButton, importButton, fileInput),
+      importError,
+    ),
     el('section', { className: 'settings-section' },
       el('h2', { text: 'Delete all data' }),
       el('div', {}, deleteButton),
@@ -46,4 +88,16 @@ export function render(root, state, actions) {
   );
   if (hadFocus) root.querySelector('#week-start').focus();
   savedNote = false;
+}
+
+// Checks the size before reading, so a huge file is never loaded into memory.
+async function readBackup(file) {
+  if (file.size > MAX_BACKUP_BYTES) {
+    return { ok: false, error: 'This file is too large to be a backup.' };
+  }
+  try {
+    return parseBackup(await file.text());
+  } catch {
+    return { ok: false, error: 'This file could not be read.' };
+  }
 }

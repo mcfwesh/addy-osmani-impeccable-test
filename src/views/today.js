@@ -11,6 +11,9 @@ export function render(root, state, actions) {
     children.push(
       el('p', { text: 'No habits yet. Add one to start tracking.' }),
       el('a', { href: '#/new', className: 'button', text: 'Add your first habit' }),
+      el('nav', { 'aria-label': 'Actions' },
+        el('a', { href: '#/settings', text: 'Settings' }),
+      ),
     );
   } else {
     if (habits.every((habit) => isDoneForToday(habit, state))) {

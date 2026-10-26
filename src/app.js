@@ -90,6 +90,10 @@ const actions = {
     state.data = emptyData();
     actions.navigate('#/');
   },
+  importData(data) {
+    commit(data);
+    actions.navigate('#/');
+  },
   toggleDay(habitId, date) {
     commit(toggleDone(state.data, habitId, date, state.todayDate));
     rerender();
