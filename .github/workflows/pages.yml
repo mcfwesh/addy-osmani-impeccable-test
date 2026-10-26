@@ -1,0 +1,53 @@
+name: Test and deploy to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+      # Unit tests have no dependencies, so no npm install is needed.
+      - run: npm test
+      - run: TZ=America/New_York npm test
+
+  deploy:
+    needs: test
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v7
+      # Publish only the app files. SPEC.md, tests/, docs/, and agent config stay off the site.
+      - name: Collect app files
+        run: |
+          mkdir _site
+          cp -R index.html manifest.webmanifest sw.js styles.css icons src _site/
+      # A new cache name per deploy makes phones pick up the new version.
+      - name: Stamp service worker version
+        run: |
+          sed -i "s/^const VERSION = 'dev';$/const VERSION = '${GITHUB_SHA}';/" _site/sw.js
+          grep -q "^const VERSION = '${GITHUB_SHA}';$" _site/sw.js
+      - uses: actions/configure-pages@v6
+      - uses: actions/upload-pages-artifact@v5
+        with:
+          path: _site
+      - id: deployment
+        uses: actions/deploy-pages@v5
