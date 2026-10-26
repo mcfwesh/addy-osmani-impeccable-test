@@ -73,3 +73,6 @@ li { gap: 0.75rem; }
 .recalc-note { margin: 0.5rem 0; font-weight: bold; }
 .delete-habit, .delete-confirm { border-width: 3px; border-style: double; font-weight: bold; }
 dialog { max-width: 28rem; }
+
+.settings-section { margin: 1.5rem 0; }
+select { min-height: 44px; min-width: 44px; font: inherit; padding: 0 0.5rem; }

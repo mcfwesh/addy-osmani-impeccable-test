@@ -26,7 +26,7 @@ Full task details, acceptance criteria, and verification steps are in `tasks/pla
 - [ ] All tests pass, review with the user, decide the design step timing
 
 ## Phase 4: Data safety
-- [ ] Task 12: Settings screen: week start and delete all data
+- [x] Task 12: Settings screen: week start and delete all data
 - [ ] Task 13: Export and import a backup
 - [ ] Task 14: Storage problem and data problem states
 - [ ] Task 15: Live updates: other tabs, midnight, and persistent storage

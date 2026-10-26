@@ -1,9 +1,10 @@
-import { load, save, addHabit, updateHabit, deleteHabit, toggleDone, emptyData } from './store.js';
+import { load, save, addHabit, updateHabit, deleteHabit, toggleDone, setWeekStartsOn, clearAll, emptyData } from './store.js';
 import { todayDate } from './dates.js';
 import { render as renderToday } from './views/today.js';
 import { render as renderHabit } from './views/habit.js';
 import { render as renderEdit } from './views/edit-habit.js';
 import { render as renderNew } from './views/new-habit.js';
+import { render as renderSettings } from './views/settings.js';
 import { render as renderStorageProblem } from './views/storage-problem.js';
 
 const loaded = load(window.localStorage);
@@ -20,6 +21,7 @@ const state = {
 const routes = [
   { pattern: '#/', view: renderToday },
   { pattern: '#/new', view: renderNew },
+  { pattern: '#/settings', view: renderSettings },
   { pattern: '#/habit/:id', view: renderHabit },
   { pattern: '#/habit/:id/edit', view: renderEdit },
 ];
@@ -76,6 +78,16 @@ const actions = {
   },
   deleteHabit(habitId) {
     commit(deleteHabit(state.data, habitId));
+    actions.navigate('#/');
+  },
+  setWeekStartsOn(weekStartsOn) {
+    commit(setWeekStartsOn(state.data, weekStartsOn));
+    rerender();
+  },
+  deleteAllData() {
+    if (readOnly) return;
+    state.saveFailed = clearAll(window.localStorage) === 'failed';
+    state.data = emptyData();
     actions.navigate('#/');
   },
   toggleDay(habitId, date) {
