@@ -35,7 +35,7 @@ Full task details, acceptance criteria, and verification steps are in `tasks/pla
 - [ ] All tests pass, end-to-end flows 1 to 6 covered, review with the user
 
 ## Phase 5: Offline and deployment
-- [ ] Task 16: Offline use and home-screen install
+- [x] Task 16: Offline use and home-screen install
 - [ ] Task 17: GitHub Pages deployment
 - [ ] Task 18: iPhone checks
 

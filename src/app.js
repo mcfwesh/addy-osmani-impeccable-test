@@ -223,3 +223,8 @@ if (!window.location.hash) {
 } else {
   renderRoute();
 }
+
+// Work offline and install to the home screen. A failed registration changes nothing.
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('./sw.js').catch(() => {});
+}
