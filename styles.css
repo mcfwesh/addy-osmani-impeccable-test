@@ -20,10 +20,13 @@ a, button, input[type="text"], input[type="number"] {
   box-sizing: border-box;
 }
 
-a.button, nav a {
+a {
   display: inline-flex;
   align-items: center;
   min-width: 44px;
+}
+
+a.button, nav a {
   padding: 0 0.75rem;
 }
 

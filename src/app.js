@@ -61,8 +61,13 @@ function matchRoute(hash) {
     const source = route.pattern.replace(/:(\w+)/g, (_, name) => { names.push(name); return '([^/]+)'; });
     const match = new RegExp(`^${source}$`).exec(hash);
     if (match) {
-      const params = Object.fromEntries(names.map((name, i) => [name, decodeURIComponent(match[i + 1])]));
-      return { view: route.view, params };
+      // A malformed escape such as '%E0%A4' throws; treat it as an unknown route.
+      try {
+        const params = Object.fromEntries(names.map((name, i) => [name, decodeURIComponent(match[i + 1])]));
+        return { view: route.view, params };
+      } catch {
+        return null;
+      }
     }
   }
   return null;
@@ -186,6 +191,8 @@ function refreshToday() {
   const next = todayDate(new Date());
   if (next === state.todayDate) return;
   state.todayDate = next;
+  // Forms do not show today, and rebuilding them would drop unsaved input.
+  if (/^#\/(new|habit\/[^/]+\/edit)$/.test(window.location.hash)) return;
   rerender();
 }
 
